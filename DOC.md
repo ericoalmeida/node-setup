@@ -1,4 +1,19 @@
-- Instalar typescript
+## Setup para projetos Node.js/Typescript
+
+- Inicie o projeto
+
+```shell
+yarn init -y
+```
+
+### Typescript
+
+#### Instalação
+
+```shell
+yarn typescript ts-node-dev tsconfig-paths -D
+```
+
 - iniciar o typescript
 
 ```shell
@@ -7,10 +22,11 @@ yarn tsc --init
 
 Configure o typescript conforme a versão do node.js em uso
 
-> Veja o exemplo abaixo:
+> conforme a versão do NodeJs em uso, e necessário configurar a versão do ECMAScript compatível.
 
 ```json
-/* Node 12 */
+//tsconfig.json
+//NodeJs v12 é compativel com a versão ES2019
 {
   "compilerOptions": {
     "lib": ["ES2019"],
@@ -20,10 +36,43 @@ Configure o typescript conforme a versão do node.js em uso
 }
 ```
 
-crie pasta SRC
-crie o arquivo server.ts
+- Arquivo de configuração do typescript depois de pronto.
 
-instale o express
+```json
+//tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "commonjs",
+    "lib": ["ES2019"],
+    "allowJs": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": false,
+    "baseUrl": ".",
+    "paths": {
+      "@config/*": ["src/config/*"],
+      "@src/*": ["src/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"]
+}
+```
+
+- crie pasta SRC
+- crie o arquivo server.ts
+
+### Express
+
+#### Instalação
 
 ```shell
 yarn add express
@@ -33,29 +82,9 @@ yarn add express
 yarn add @types/express -D
 ```
 
-- instale ts-node-dev
+#### Configuração
 
-```shell
-yarn add ts-node-dev -D
-```
-
-- adicione o script abaixo
-
-```json
- "scripts": {
-    "dev": "ts-node-dev --respawn --transpileOnly --ignore-watch node_modules --no-notify src/server.ts"
-  },
-```
-
-- configure tsconfig.json
-
-- Instale tsconfig-paths
-
-```shell
-yarn add tsconfig-paths -D
-```
-
-- Atualialize o script **dev**
+- adicione o script abaixo para iniciar a plicação em ambiente de desenvolvimento
 
 ```json
  "scripts": {
@@ -63,7 +92,9 @@ yarn add tsconfig-paths -D
   },
 ```
 
-- Adicione o eslint
+### ESLint
+
+#### Instalação
 
 ```shell
 yarn add eslint -D
@@ -80,19 +111,23 @@ yarn add eslint -D
 √ What format do you want your config file to be in? · JSON
 ```
 
-- Instale o prettier
+### Prettier
+
+#### Instalação
 
 ```shell
 yarn add prettier eslint-config-prettier eslint-plugin-prettier -D
 ```
 
-#######
+### Jest
 
-- Instale o jest
+#### Instalação
 
 ```shell
 yarn add jest ts-jest @types/jest -D
 ```
+
+#### Configuração
 
 ```shell
 yarn jest --init
@@ -110,10 +145,44 @@ moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
 }),
 ```
 
-##############
-instale o babel
+### Babel
+
+#### Instalação
 
 ```shell
 yarn add -D @babel/cli @babel/core @babel/node @babel/preset-env @babel/preset-typescript babel-plugin-module-resolver
+```
 
+#### Configuração
+
+- Configure o babel conforme o exemplo abaixo:
+
+```js
+//babel.config.js
+module.exports = {
+  presets: [
+    ['@babel/preset-env', { targets: { node: 'current' } }],
+    '@babel/preset-typescript',
+  ],
+  plugins: [
+    [
+      'module-resolver',
+      {
+        alias: {
+          '@src': './src',
+          '@config': './src/config',
+        },
+      },
+    ],
+  ],
+  ignore: ['**/*.spec.ts'],
+};
+```
+
+- Adicione ao **package.json** um script para build.
+
+```json
+  "scripts": {
+    "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
+  },
 ```
