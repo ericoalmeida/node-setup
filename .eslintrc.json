@@ -8,6 +8,7 @@
     "airbnb-base",
     "plugin:@typescript-eslint/recommended",
     "prettier/@typescript-eslint",
+    "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
@@ -76,5 +77,10 @@
         "alphabetize": { "order": "asc", "ignoreCase": true }
       }
     ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }
